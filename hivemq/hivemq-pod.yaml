@@ -1,0 +1,146 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/podIP: 172.16.192.170/32
+    k8s.v1.cni.cncf.io/networks-status: |-
+      [{
+          "name": "chain",
+          "ips": [
+              "172.16.192.170"
+          ],
+          "default": true,
+          "dns": {}
+      }]
+  creationTimestamp: "2020-09-11T11:20:40Z"
+  generateName: hivemq-replica-
+  labels:
+    app: hivemq-cluster1
+  name: hivemq-replica-krr6m
+  namespace: default
+  ownerReferences:
+  - apiVersion: v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicationController
+    name: hivemq-replica
+    uid: 1bcca38c-e70a-424e-885a-04fce421dfe0
+  resourceVersion: "50658746"
+  selfLink: /api/v1/namespaces/default/pods/hivemq-replica-krr6m
+  uid: 6e1b353f-52af-42c2-aca2-e2a10ffddac2
+spec:
+  containers:
+  - env:
+    - name: HIVEMQ_DNS_DISCOVERY_ADDRESS
+      value: hivemq-discovery.default.svc.cluster.local.
+    - name: HIVEMQ_DNS_DISCOVERY_TIMEOUT
+      value: "20"
+    - name: HIVEMQ_DNS_DISCOVERY_INTERVAL
+      value: "21"
+    - name: HIVEMQ_INFLIGHT
+      value: "1000"
+    image: hivemq/hivemq4:dns-4.3.2
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 60
+      initialDelaySeconds: 30
+      periodSeconds: 60
+      successThreshold: 1
+      tcpSocket:
+        port: 1883
+      timeoutSeconds: 1
+    name: hivemq-pods
+    ports:
+    - containerPort: 8080
+      name: web-ui
+      protocol: TCP
+    - containerPort: 1883
+      name: mqtt
+      protocol: TCP
+    - containerPort: 8883
+      name: mqtt-ssl
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      successThreshold: 1
+      tcpSocket:
+        port: 1883
+      timeoutSeconds: 1
+    resources:
+      limits:
+        cpu: "8"
+      requests:
+        cpu: "8"
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-lwhj4
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  imagePullSecrets:
+  - name: abbiotcontainerregistrysecret
+  nodeName: controller-0
+  nodeSelector:
+    rtpatch: "false"
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 30
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 30
+  volumes:
+  - name: default-token-lwhj4
+    secret:
+      defaultMode: 420
+      secretName: default-token-lwhj4
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2020-09-11T11:20:40Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2020-09-11T11:20:55Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2020-09-11T11:20:55Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2020-09-11T11:20:40Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://171d3e34a4bc5d8165a26f59ca933c2a87eaa99e3e2f1bef4006b04ea49b26a9
+    image: abbiotcontainerregistry.azurecr.io/hivemq-tls:latest
+    imageID: docker-pullable://abbiotcontainerregistry.azurecr.io/hivemq-tls@sha256:170a46e390efb31e96b46115edc6adc0889efcba9fc24847124fabffa00d855d
+    lastState: {}
+    name: hivemq-pods
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2020-09-11T11:20:46Z"
+  hostIP: 192.168.204.2
+  phase: Running
+  podIP: 172.16.192.170
+  podIPs:
+  - ip: 172.16.192.170
+  qosClass: Burstable
+  startTime: "2020-09-11T11:20:40Z"

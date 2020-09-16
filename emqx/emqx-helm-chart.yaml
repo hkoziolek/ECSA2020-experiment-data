@@ -1,0 +1,248 @@
+REVISION: 1
+RELEASED: Wed May 13 19:03:45 2020
+CHART: emqx-v4.0.5
+USER-SUPPLIED VALUES:
+{}
+
+COMPUTED VALUES:
+affinity: {}
+emqxConfig:
+  EMQX_CLUSTER__K8S__ADDRESS_TYPE: hostname
+  EMQX_CLUSTER__K8S__APISERVER: https://kubernetes.default.svc:443
+  EMQX_CLUSTER__K8S__SUFFIX: svc.cluster.local
+emqxLicneseSecretName: null
+image:
+  pullPolicy: IfNotPresent
+  repository: emqx/emqx
+ingress:
+  annotations: {}
+  enabled: false
+  hosts:
+  - chart-example.local
+  path: /
+  tls: []
+nodeSelector: {}
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: false
+  size: 20Mi
+replicaCount: 3
+resources: {}
+service:
+  type: ClusterIP
+tolerations: []
+
+HOOKS:
+MANIFEST:
+
+---
+# Source: emqx/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: emqx-env
+  namespace: default
+  labels:
+    app.kubernetes.io/name: emqx
+    helm.sh/chart: emqx-v4.0.5
+    app.kubernetes.io/instance: emqx
+    app.kubernetes.io/managed-by: Tiller
+data:
+    EMQX_CLUSTER__K8S__ADDRESS_TYPE: "hostname"
+    EMQX_CLUSTER__K8S__APISERVER: "https://kubernetes.default.svc:443"
+    EMQX_CLUSTER__K8S__SUFFIX: "svc.cluster.local"
+---
+# Source: emqx/templates/rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: default
+  name: emqx
+---
+# Source: emqx/templates/rbac.yaml
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: default
+  name: emqx
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - endpoints 
+  verbs: 
+  - get
+  - watch
+  - list
+---
+# Source: emqx/templates/rbac.yaml
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: default
+  name: emqx
+subjects:
+  - kind: ServiceAccount
+    name: emqx
+    namespace: default
+roleRef:
+  kind: Role
+  name: emqx
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: emqx/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: emqx
+  namespace: default
+  labels:
+    app.kubernetes.io/name: emqx
+    helm.sh/chart: emqx-v4.0.5
+    app.kubernetes.io/instance: emqx
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  type: ClusterIP 
+  ports:
+  - name: mqtt
+    port: 1883
+    protocol: TCP
+    targetPort: 1883
+  - name: mqttssl
+    port: 8883
+    protocol: TCP
+    targetPort: 8883
+  - name: mgmt
+    port: 8081
+    protocol: TCP
+    targetPort: 8081
+  - name: websocket
+    port: 8083
+    protocol: TCP
+    targetPort: 8083
+  - name: wss
+    port: 8084
+    protocol: TCP
+    targetPort: 8084
+  - name: dashboard
+    port: 18083
+    protocol: TCP
+    targetPort: 18083
+  selector:
+    app.kubernetes.io/name: emqx
+    app.kubernetes.io/instance: emqx
+---
+# Source: emqx/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: emqx-headless
+  namespace: default
+  labels:
+    app.kubernetes.io/name: emqx
+    helm.sh/chart: emqx-v4.0.5
+    app.kubernetes.io/instance: emqx
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  clusterIP: None
+  ports:
+  - name: mqtt
+    port: 1883
+    protocol: TCP
+    targetPort: 1883
+  - name: mqttssl
+    port: 8883
+    protocol: TCP
+    targetPort: 8883
+  - name: mgmt
+    port: 8081
+    protocol: TCP
+    targetPort: 8081
+  - name: websocket
+    port: 8083
+    protocol: TCP
+    targetPort: 8083
+  - name: wss
+    port: 8084
+    protocol: TCP
+    targetPort: 8084
+  - name: dashboard
+    port: 18083
+    protocol: TCP
+    targetPort: 18083
+  selector:
+    app.kubernetes.io/name: emqx
+    app.kubernetes.io/instance: emqx
+---
+# Source: emqx/templates/StatefulSet.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: emqx
+  namespace: default
+  labels:
+    app.kubernetes.io/name: emqx
+    helm.sh/chart: emqx-v4.0.5
+    app.kubernetes.io/instance: emqx
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  serviceName: emqx-headless
+  updateStrategy:
+    type: RollingUpdate
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: emqx
+      app.kubernetes.io/instance: emqx
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: emqx
+        app.kubernetes.io/instance: emqx
+    spec:
+      volumes:
+      - name: emqx-data
+        emptyDir: {}
+      serviceAccountName:  emqx
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: emqx
+          image: "emqx/emqx:v4.0.5"
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 1883
+          - containerPort: 8883
+          - containerPort: 8081
+          - containerPort: 8083
+          - containerPort: 8084
+          - containerPort: 18083
+          envFrom:
+            - configMapRef:
+                name: emqx-env 
+          env:
+          - name: EMQX_NAME
+            value: emqx 
+          - name: EMQX_CLUSTER__K8S__APP_NAME
+            value: emqx 
+          - name: EMQX_CLUSTER__DISCOVERY
+            value: k8s 
+          - name: EMQX_CLUSTER__K8S__SERVICE_NAME
+            value: emqx-headless
+          - name: EMQX_CLUSTER__K8S__NAMESPACE
+            value: default
+          resources:
+            {}
+            
+          volumeMounts:
+          - name: emqx-data
+            mountPath: "/opt/emqx/data/mnesia"
+          
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 5

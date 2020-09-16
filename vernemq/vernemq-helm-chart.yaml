@@ -1,0 +1,467 @@
+REVISION: 16
+RELEASED: Thu May  7 21:33:19 2020
+CHART: vernemq-1.6.2
+USER-SUPPLIED VALUES:
+additionalEnv:
+- name: DOCKER_VERNEMQ_ACCEPT_EULA
+  value: "yes"
+- name: DOCKER_VERNEMQ_ALLOW_REGISTER_DURING_NETSPLIT
+  value: "on"
+- name: DOCKER_VERNEMQ_ALLOW_PUBLISH_DURING_NETSPLIT
+  value: "on"
+- name: DOCKER_VERNEMQ_ALLOW_SUBSCRIBE_DURING_NETSPLIT
+  value: "on"
+- name: DOCKER_VERNEMQ_ALLOW_UNSUBSCRIBE_DURING_NETSPLIT
+  value: "on"
+- name: DOCKER_VERNEMQ_ALLOW_ANONYMOUS
+  value: "on"
+- name: DOCKER_VERNEMQ_LISTENER__SSL__CAFILE
+  value: /etc/ssl/vernemq/all-ca.crt
+- name: DOCKER_VERNEMQ_LISTENER__SSL__CERTFILE
+  value: /etc/ssl/vernemq/server.crt
+- name: DOCKER_VERNEMQ_LISTENER__SSL__KEYFILE
+  value: /etc/ssl/vernemq/server.key
+- name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST
+  value: 127.0.0.1:8883
+- name: DOCKER_VERNEMQ_LISTENER__SSL__DEFAULT__REQUIRE_CERTIFICATE
+  value: "off"
+- name: DOCKER_VERNEMQ_LISTENER__SSL__DEFAULT__USE_IDENTITY_AS_USERNAME
+  value: "off"
+- name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST__USE_IDENTITY_AS_USERNAME
+  value: "off"
+- name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST__REQUIRE_CERTIFICATE
+  value: "off"
+fullnameOverride: ""
+image:
+  pullPolicy: IfNotPresent
+  repository: vernemq/vernemq
+  tag: 1.10.2-1-alpine
+nameOverride: ""
+nodeSelector: {}
+pdb:
+  enabled: false
+  minAvailable: 1
+persistentVolume:
+  accessModes:
+  - ReadWriteOnce
+  annotations: {}
+  enabled: false
+  size: 5Gi
+podAntiAffinity: soft
+rbac:
+  create: true
+  serviceAccount:
+    create: true
+replicaCount: 3
+resources: {}
+secretMounts:
+- name: vernemq-certificates
+  path: /etc/ssl/vernemq
+  secretName: vernemq-certificates-secret
+securityContext:
+  fsGroup: 10000
+  runAsGroup: 10000
+  runAsUser: 10000
+service:
+  annotations: {}
+  labels: {}
+  mqtt:
+    enabled: true
+    nodePort: 1883
+    port: 1883
+  mqtts:
+    enabled: true
+    nodePort: 8883
+    port: 8883
+  type: LoadBalancer
+  ws:
+    enabled: true
+    nodePort: 8080
+    port: 8080
+serviceMonitor:
+  create: false
+statefulset:
+  annotations: {}
+  labels: {}
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  podAnnotations: {}
+  podManagementPolicy: OrderedReady
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  terminationGracePeriodSeconds: 60
+  updateStrategy: RollingUpdate
+tolerations: []
+
+COMPUTED VALUES:
+additionalEnv:
+- name: DOCKER_VERNEMQ_ACCEPT_EULA
+  value: "yes"
+- name: DOCKER_VERNEMQ_ALLOW_REGISTER_DURING_NETSPLIT
+  value: "on"
+- name: DOCKER_VERNEMQ_ALLOW_PUBLISH_DURING_NETSPLIT
+  value: "on"
+- name: DOCKER_VERNEMQ_ALLOW_SUBSCRIBE_DURING_NETSPLIT
+  value: "on"
+- name: DOCKER_VERNEMQ_ALLOW_UNSUBSCRIBE_DURING_NETSPLIT
+  value: "on"
+- name: DOCKER_VERNEMQ_ALLOW_ANONYMOUS
+  value: "on"
+- name: DOCKER_VERNEMQ_LISTENER__SSL__CAFILE
+  value: /etc/ssl/vernemq/all-ca.crt
+- name: DOCKER_VERNEMQ_LISTENER__SSL__CERTFILE
+  value: /etc/ssl/vernemq/server.crt
+- name: DOCKER_VERNEMQ_LISTENER__SSL__KEYFILE
+  value: /etc/ssl/vernemq/server.key
+- name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST
+  value: 127.0.0.1:8883
+- name: DOCKER_VERNEMQ_LISTENER__SSL__DEFAULT__REQUIRE_CERTIFICATE
+  value: "off"
+- name: DOCKER_VERNEMQ_LISTENER__SSL__DEFAULT__USE_IDENTITY_AS_USERNAME
+  value: "off"
+- name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST__USE_IDENTITY_AS_USERNAME
+  value: "off"
+- name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST__REQUIRE_CERTIFICATE
+  value: "off"
+fullnameOverride: ""
+image:
+  pullPolicy: IfNotPresent
+  repository: vernemq/vernemq
+  tag: 1.10.2-1-alpine
+nameOverride: ""
+nodeSelector: {}
+pdb:
+  enabled: false
+  minAvailable: 1
+persistentVolume:
+  accessModes:
+  - ReadWriteOnce
+  annotations: {}
+  enabled: false
+  size: 5Gi
+podAntiAffinity: soft
+rbac:
+  create: true
+  serviceAccount:
+    create: true
+replicaCount: 3
+resources: {}
+secretMounts:
+- name: vernemq-certificates
+  path: /etc/ssl/vernemq
+  secretName: vernemq-certificates-secret
+securityContext:
+  fsGroup: 10000
+  runAsGroup: 10000
+  runAsUser: 10000
+service:
+  annotations: {}
+  labels: {}
+  mqtt:
+    enabled: true
+    nodePort: 1883
+    port: 1883
+  mqtts:
+    enabled: true
+    nodePort: 8883
+    port: 8883
+  type: LoadBalancer
+  ws:
+    enabled: true
+    nodePort: 8080
+    port: 8080
+serviceMonitor:
+  create: false
+statefulset:
+  annotations: {}
+  labels: {}
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  podAnnotations: {}
+  podManagementPolicy: OrderedReady
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  terminationGracePeriodSeconds: 60
+  updateStrategy: RollingUpdate
+tolerations: []
+
+HOOKS:
+MANIFEST:
+
+---
+# Source: vernemq/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vernemq
+  namespace: default
+  labels:
+    app.kubernetes.io/name: vernemq
+    helm.sh/chart: vernemq-1.6.2
+    app.kubernetes.io/instance: vernemq
+    app.kubernetes.io/managed-by: Tiller
+---
+# Source: vernemq/templates/role.yaml
+# VerneMQ needs to query k8s apiserver to list the other pods in the namespace
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: vernemq
+  namespace: default
+  labels:
+    app.kubernetes.io/name: vernemq
+    helm.sh/chart: vernemq-1.6.2
+    app.kubernetes.io/instance: vernemq
+    app.kubernetes.io/managed-by: Tiller
+rules:
+  - apiGroups: [""] # "" indicates the core API group
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
+---
+# Source: vernemq/templates/rolebinding.yaml
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: vernemq
+  namespace: default
+  labels:
+    app.kubernetes.io/name: vernemq
+    helm.sh/chart: vernemq-1.6.2
+    app.kubernetes.io/instance: vernemq
+    app.kubernetes.io/managed-by: Tiller
+subjects:
+  - kind: ServiceAccount
+    name: vernemq 
+    namespace: default
+roleRef:
+  kind: Role 
+  name: vernemq 
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: vernemq/templates/headless-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: vernemq-headless
+  labels:
+    app.kubernetes.io/name: vernemq
+    helm.sh/chart: vernemq-1.6.2
+    app.kubernetes.io/instance: vernemq
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  clusterIP: None
+  ports:
+  - name: empd
+    port: 4369
+  - name: metrics
+    port: 8888
+    targetPort: prometheus
+  selector:
+    app.kubernetes.io/name: vernemq
+    app.kubernetes.io/instance: vernemq
+---
+# Source: vernemq/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: vernemq
+  labels:
+    app.kubernetes.io/name: vernemq
+    helm.sh/chart: vernemq-1.6.2
+    app.kubernetes.io/instance: vernemq
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 1883
+      targetPort: mqtt
+      name: mqtt
+    - port: 8883
+      targetPort: mqtts
+      name: mqtts
+    - port: 8080
+      targetPort: ws
+      name: ws
+  selector:
+    app.kubernetes.io/name: vernemq
+    app.kubernetes.io/instance: vernemq
+---
+# Source: vernemq/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: vernemq
+  labels:
+    app.kubernetes.io/name: vernemq
+    helm.sh/chart: vernemq-1.6.2
+    app.kubernetes.io/instance: vernemq
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  serviceName: vernemq-headless
+  replicas: 3
+  podManagementPolicy: OrderedReady
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vernemq
+      app.kubernetes.io/instance: vernemq
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vernemq
+        app.kubernetes.io/instance: vernemq
+    spec:
+      serviceAccountName: vernemq
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: vernemq
+          image: "vernemq/vernemq:1.10.2-1-alpine"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 1883
+              name: mqtt
+            - containerPort: 8883
+              name: mqtts
+            - containerPort: 4369
+              name: epmd
+            - containerPort: 44053
+              name: vmq
+            - containerPort: 8080
+              name: ws
+            - containerPort: 8888
+              name: prometheus
+            - containerPort: 9100
+            - containerPort: 9101
+            - containerPort: 9102
+            - containerPort: 9103
+            - containerPort: 9104
+            - containerPort: 9105
+            - containerPort: 9106
+            - containerPort: 9107
+            - containerPort: 9108
+            - containerPort: 9109
+          env:
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: DOCKER_VERNEMQ_DISCOVERY_KUBERNETES
+              value: "1"
+            - name: DOCKER_VERNEMQ_KUBERNETES_LABEL_SELECTOR
+              value: "app.kubernetes.io/name=vernemq,app.kubernetes.io/instance=vernemq"
+            - name: DOCKER_VERNEMQ_LISTENER__TCP__LOCALHOST
+              value: "127.0.0.1:1883"
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__DEFAULT
+              value: "$(MY_POD_IP):8883"
+            
+            - name: DOCKER_VERNEMQ_ACCEPT_EULA
+              value: "yes"
+            - name: DOCKER_VERNEMQ_ALLOW_REGISTER_DURING_NETSPLIT
+              value: "on"
+            - name: DOCKER_VERNEMQ_ALLOW_PUBLISH_DURING_NETSPLIT
+              value: "on"
+            - name: DOCKER_VERNEMQ_ALLOW_SUBSCRIBE_DURING_NETSPLIT
+              value: "on"
+            - name: DOCKER_VERNEMQ_ALLOW_UNSUBSCRIBE_DURING_NETSPLIT
+              value: "on"
+            - name: DOCKER_VERNEMQ_ALLOW_ANONYMOUS
+              value: "on"
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__CAFILE
+              value: /etc/ssl/vernemq/all-ca.crt
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__CERTFILE
+              value: /etc/ssl/vernemq/server.crt
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__KEYFILE
+              value: /etc/ssl/vernemq/server.key
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST
+              value: 127.0.0.1:8883
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__DEFAULT__REQUIRE_CERTIFICATE
+              value: "off"
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__DEFAULT__USE_IDENTITY_AS_USERNAME
+              value: "off"
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST__USE_IDENTITY_AS_USERNAME
+              value: "off"
+            - name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST__REQUIRE_CERTIFICATE
+              value: "off"
+            
+          resources:
+            
+            {}
+            
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: prometheus
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: prometheus
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          volumeMounts:
+            - name: logs
+              mountPath: /vernemq/log
+            - name: data
+              mountPath: /vernemq/data
+            - name: vernemq-certificates
+              mountPath: /etc/ssl/vernemq
+              readOnly: true
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+                labelSelector:
+                  matchExpressions:
+                    - key: "app"
+                      operator: In
+                      values:
+                        - vernemq
+                    - key: "release"
+                      operator: In
+                      values:
+                        - vernemq
+      securityContext:
+        
+        fsGroup: 10000
+        runAsGroup: 10000
+        runAsUser: 10000
+        
+      volumes:
+        - name: logs
+          emptyDir: {}
+        - name: vernemq-certificates
+          secret:
+            secretName: vernemq-certificates-secret
+        - name: data

@@ -1,0 +1,52 @@
+#!benchDL
+# the simplest example
+make_install(git = "https://github.com/erlio/vmq_mzbench.git",
+             branch = "master")
+
+
+include_resource(cacertsfile, "https://gist.githubusercontent.com/ioolkos/1e6e0107b961caf910a0deb61a7e4a23/raw/041e3c747d75880d0811409c0955ee3f1bfc0784/erlang_ca.erl", erlang)
+include_resource(certfile, "https://gist.githubusercontent.com/ioolkos/1e6e0107b961caf910a0deb61a7e4a23/raw/041e3c747d75880d0811409c0955ee3f1bfc0784/erlang_client_cert.erl", erlang)
+include_resource(keyfile, "https://gist.githubusercontent.com/ioolkos/1e6e0107b961caf910a0deb61a7e4a23/raw/041e3c747d75880d0811409c0955ee3f1bfc0784/erlang_client_key.erl", erlang)
+             
+pool(size = 10,
+     worker_type = mqtt_worker):
+            connect(host = "172.16.13.13", transport=t(ssl, [t(verify, verify_none), t(reuse_sessions, false),t(cacerts, resource(cacertsfile)),t(cert,resource(certfile)),t(key, resource(keyfile))]), port = 8883,client = fixed_client_id("subscriber1", worker_id()),clean_session = true,keepalive_interval = 60,proto_version = 4,reconnect_timeout = 4)
+            wait(2 sec)
+            subscribe(sprintf("prefix/clients/pool1-~p", [worker_id()]), 1)
+
+
+pool(size = 10,
+     worker_type = mqtt_worker,
+     worker_start = poisson(1000 rps)):
+            connect(host = "172.16.13.13", transport=t(ssl, [t(verify, verify_none), t(reuse_sessions, false),t(cacerts, resource(cacertsfile)),t(cert,resource(certfile)),t(key, resource(keyfile))]), port = 8883,client = fixed_client_id("pool1", worker_id()),clean_session = true,keepalive_interval = 60,proto_version = 4,reconnect_timeout = 4)
+
+            set_signal(connect1, 1)
+            wait_signal(connect1, 10)
+            wait(7 sec)
+            loop(time = 2 min, rate = 100 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+            loop(time = 2 min, rate = 200 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+            loop(time = 2 min, rate = 400 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+            loop(time = 2 min, rate = 600 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+            loop(time = 2 min, rate = 800 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+            loop(time = 2 min, rate = 1000 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+            loop(time = 2 min, rate = 1300 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+            loop(time = 2 min, rate = 1600 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+            loop(time = 2 min, rate = 1900 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+            loop(time = 2 min, rate = 2200 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+            loop(time = 2 min, rate = 2500 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+            loop(time = 2 min, rate = 2800 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+                
+            disconnect()
+            wait(30 sec) #grace time to consume

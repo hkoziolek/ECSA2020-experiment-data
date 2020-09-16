@@ -1,0 +1,262 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/podIP: 172.16.166.160/32
+    k8s.v1.cni.cncf.io/networks-status: |-
+      [{
+          "name": "chain",
+          "ips": [
+              "172.16.166.160"
+          ],
+          "default": true,
+          "dns": {}
+      }]
+  creationTimestamp: "2020-09-11T11:22:03Z"
+  generateName: vernemq-
+  labels:
+    app.kubernetes.io/instance: vernemq
+    app.kubernetes.io/name: vernemq
+    controller-revision-hash: vernemq-86976c5cfb
+    statefulset.kubernetes.io/pod-name: vernemq-0
+  name: vernemq-0
+  namespace: default
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: StatefulSet
+    name: vernemq
+    uid: becd350f-ab90-4ac0-b681-17e7b7f181ff
+  resourceVersion: "50660902"
+  selfLink: /api/v1/namespaces/default/pods/vernemq-0
+  uid: 39ffb2e8-2443-434e-a1ca-57bbecc3b419
+spec:
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - vernemq
+            - key: release
+              operator: In
+              values:
+              - vernemq
+          topologyKey: kubernetes.io/hostname
+        weight: 100
+  containers:
+  - env:
+    - name: MY_POD_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    - name: MY_POD_IP
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.podIP
+    - name: DOCKER_VERNEMQ_DISCOVERY_KUBERNETES
+      value: "1"
+    - name: DOCKER_VERNEMQ_KUBERNETES_LABEL_SELECTOR
+      value: app.kubernetes.io/name=vernemq,app.kubernetes.io/instance=vernemq
+    - name: DOCKER_VERNEMQ_LISTENER__TCP__LOCALHOST
+      value: 127.0.0.1:1883
+    - name: DOCKER_VERNEMQ_MAX_CLIENT_ID_SIZE
+      value: "100"
+    - name: DOCKER_VERNEMQ_MAX_ONLINE_MESSAGES
+      value: "50000"
+    - name: DOCKER_VERNEMQ_MAX_OFFLINE_MESSAGES
+      value: "50000"
+    - name: DOCKER_VERNEMQ_MAX_INFLIGHT_MESSAGES
+      value: "1000"
+    - name: DOCKER_VERNEMQ_LISTENER__SSL__DEFAULT
+      value: $(MY_POD_IP):8883
+    - name: DOCKER_VERNEMQ_ACCEPT_EULA
+      value: "yes"
+    - name: DOCKER_VERNEMQ_ALLOW_REGISTER_DURING_NETSPLIT
+      value: "on"
+    - name: DOCKER_VERNEMQ_ALLOW_PUBLISH_DURING_NETSPLIT
+      value: "on"
+    - name: DOCKER_VERNEMQ_ALLOW_SUBSCRIBE_DURING_NETSPLIT
+      value: "on"
+    - name: DOCKER_VERNEMQ_ALLOW_UNSUBSCRIBE_DURING_NETSPLIT
+      value: "on"
+    - name: DOCKER_VERNEMQ_ALLOW_ANONYMOUS
+      value: "on"
+    - name: DOCKER_VERNEMQ_LISTENER__SSL__CAFILE
+      value: /etc/ssl/vernemq/all-ca.crt
+    - name: DOCKER_VERNEMQ_LISTENER__SSL__CERTFILE
+      value: /etc/ssl/vernemq/server.crt
+    - name: DOCKER_VERNEMQ_LISTENER__SSL__KEYFILE
+      value: /etc/ssl/vernemq/server.key
+    - name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST
+      value: 127.0.0.1:8883
+    - name: DOCKER_VERNEMQ_LISTENER__SSL__DEFAULT__REQUIRE_CERTIFICATE
+      value: "off"
+    - name: DOCKER_VERNEMQ_LISTENER__SSL__DEFAULT__USE_IDENTITY_AS_USERNAME
+      value: "off"
+    - name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST__USE_IDENTITY_AS_USERNAME
+      value: "off"
+    - name: DOCKER_VERNEMQ_LISTENER__SSL__LOCALHOST__REQUIRE_CERTIFICATE
+      value: "off"
+    image: vernemq/vernemq:1.10.2-1-alpine
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /health
+        port: prometheus
+        scheme: HTTP
+      initialDelaySeconds: 90
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
+    name: vernemq
+    ports:
+    - containerPort: 1883
+      name: mqtt
+      protocol: TCP
+    - containerPort: 8883
+      name: mqtts
+      protocol: TCP
+    - containerPort: 4369
+      name: epmd
+      protocol: TCP
+    - containerPort: 44053
+      name: vmq
+      protocol: TCP
+    - containerPort: 8080
+      name: ws
+      protocol: TCP
+    - containerPort: 8888
+      name: prometheus
+      protocol: TCP
+    - containerPort: 9100
+      protocol: TCP
+    - containerPort: 9101
+      protocol: TCP
+    - containerPort: 9102
+      protocol: TCP
+    - containerPort: 9103
+      protocol: TCP
+    - containerPort: 9104
+      protocol: TCP
+    - containerPort: 9105
+      protocol: TCP
+    - containerPort: 9106
+      protocol: TCP
+    - containerPort: 9107
+      protocol: TCP
+    - containerPort: 9108
+      protocol: TCP
+    - containerPort: 9109
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /health
+        port: prometheus
+        scheme: HTTP
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources:
+      limits:
+        cpu: "8"
+      requests:
+        cpu: "8"
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /vernemq/log
+      name: logs
+    - mountPath: /vernemq/data
+      name: data
+    - mountPath: /etc/ssl/vernemq
+      name: vernemq-certificates
+      readOnly: true
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: vernemq-token-bqbx6
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  hostname: vernemq-0
+  nodeName: controller-1
+  nodeSelector:
+    rtpatch: "false"
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext:
+    fsGroup: 10000
+    runAsGroup: 10000
+    runAsUser: 10000
+  serviceAccount: vernemq
+  serviceAccountName: vernemq
+  subdomain: vernemq-headless
+  terminationGracePeriodSeconds: 60
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 30
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 30
+  volumes:
+  - emptyDir: {}
+    name: logs
+  - name: vernemq-certificates
+    secret:
+      defaultMode: 420
+      secretName: vernemq-certificates-secret
+  - emptyDir: {}
+    name: data
+  - name: vernemq-token-bqbx6
+    secret:
+      defaultMode: 420
+      secretName: vernemq-token-bqbx6
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2020-09-11T11:30:16Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2020-09-11T11:30:44Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2020-09-11T11:30:44Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2020-09-11T11:30:16Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://f5fee4752b7835d299eaafd02f77928e658241abb88b9bbfea97232431aef01b
+    image: vernemq/vernemq:1.10.2-1-alpine
+    imageID: docker-pullable://vernemq/vernemq@sha256:c0966d03a851b7b05b3b7b040c93b2da45da7406f4dc145ffda29f1a071754a4
+    lastState: {}
+    name: vernemq
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2020-09-11T11:30:27Z"
+  hostIP: 192.168.204.3
+  phase: Running
+  podIP: 172.16.166.160
+  podIPs:
+  - ip: 172.16.166.160
+  qosClass: Burstable
+  startTime: "2020-09-11T11:30:16Z"

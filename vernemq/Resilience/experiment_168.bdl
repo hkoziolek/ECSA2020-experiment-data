@@ -1,0 +1,31 @@
+#!benchDL
+# the simplest example
+make_install(git = "https://github.com/erlio/vmq_mzbench.git",
+             branch = "master")
+
+
+include_resource(cacertsfile, "https://gist.githubusercontent.com/ioolkos/1e6e0107b961caf910a0deb61a7e4a23/raw/041e3c747d75880d0811409c0955ee3f1bfc0784/erlang_ca.erl", erlang)
+include_resource(certfile, "https://gist.githubusercontent.com/ioolkos/1e6e0107b961caf910a0deb61a7e4a23/raw/041e3c747d75880d0811409c0955ee3f1bfc0784/erlang_client_cert.erl", erlang)
+include_resource(keyfile, "https://gist.githubusercontent.com/ioolkos/1e6e0107b961caf910a0deb61a7e4a23/raw/041e3c747d75880d0811409c0955ee3f1bfc0784/erlang_client_key.erl", erlang)
+             
+pool(size = 2,
+     worker_type = mqtt_worker):
+            connect(host = "172.16.13.12", port = 1883,client = fixed_client_id("subscriber1", worker_id()),clean_session = false,keepalive_interval = 60,proto_version = 3,reconnect_timeout = 2)
+            wait(2 sec)
+            loop(rate = 1rps, time=4 min):
+                subscribe("prefix/clients/pool1-1", 1)
+
+
+pool(size = 1,
+     worker_type = mqtt_worker,
+     worker_start = poisson(100 rps)):
+            connect(host = "172.16.13.12", port = 1883,client = fixed_client_id("pool1", worker_id()),clean_session = true,keepalive_interval = 60,proto_version = 3,reconnect_timeout = 2)
+
+            set_signal(connect1, 1)
+            wait_signal(connect1, 1)
+            wait(7 sec)
+            loop(time = 3 min, rate = 100 rps):
+                publish_to_self("prefix/clients/", random_binary(150), 1)
+
+            disconnect()
+            wait(60 sec) #grace time to consume
