@@ -34,5 +34,10 @@ The data can be used for various purposes:
 ## How to use the data
 We used Python scripts to create the plots for the paper, which crossed the Prometheus cpu load metrics with the throughput metrics from MZBench. 
 
-You can import or copy the BDL scripts into your own MZBench installation (using its dashboard or command line) to reproduce the experiments. This requires updating the IP addresses for the brokers to your own installation. We used private IP addresses only valid in our own specific setting.
+To use the BDL scripts, you need to setup [MZBench](https://satori-com.github.io/mzbench/), for example as Docker container, from binaries, or building the source. You can import or copy the BDL scripts into your MZBench installation (using its dashboard or command line) to reproduce the experiments. MZBench's [quickstart guide](https://satori-com.github.io/mzbench/) explains you how to do this in detail. Starting the scenarios requires updating the included IP addresses for the brokers to your own installation. We used private IP addresses only valid in our own specific experiment setup.
+
+You'll also need to setup the MQTT Brokers, and there are numerous methods to do this:
+ - [EMQX](https://github.com/emqx/emqx) can be installed from binaries or by building the source. If you have Kubernetes/Helm you can also use [EMQX helm charts](https://github.com/emqx/emqx-rel/tree/master/deploy/charts/emqx).
+ - [HiveMQ](https://www.hivemq.com/docs/hivemq/4.4/user-guide/getting-started.html) provides various installation options.
+ - [VerneMQ](https://github.com/vernemq/vernemq) is also available as source, binaries, Docker containers and helm charts.
 
