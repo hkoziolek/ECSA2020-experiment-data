@@ -41,3 +41,5 @@ To use the BDL scripts, you need to setup [MZBench](https://satori-com.github.io
 
 We used Python scripts to create the plots for the paper, which crossed the Prometheus cpu load metrics with the throughput metrics from MZBench. 
 
+## Resources
+
