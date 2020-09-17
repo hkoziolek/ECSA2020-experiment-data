@@ -42,6 +42,5 @@ To use the BDL scripts, you need to setup [MZBench](https://satori-com.github.io
 We used Python scripts to create the plots for the paper, which crossed the Prometheus cpu load metrics with the throughput metrics from MZBench. 
 
 ## Resources
-- [VerneMQ: Reaching 5M message connections](https://www.slideshare.net/ConnectedMarketing/reaching-5-
-million-messaging-connections-our-journey-with-kubernetes-126143229)
+- [VerneMQ: Reaching 5M message connections](https://www.slideshare.net/ConnectedMarketing/reaching-5-million-messaging-connections-our-journey-with-kubernetes-126143229)
 
