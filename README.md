@@ -39,5 +39,5 @@ To use the BDL scripts, you need to setup [MZBench](https://satori-com.github.io
 You'll also need to setup the MQTT Brokers, and there are numerous methods to do this:
  - [EMQX](https://github.com/emqx/emqx) can be installed from binaries or by building the source. If you have Kubernetes/Helm you can also use [EMQX helm charts](https://github.com/emqx/emqx-rel/tree/master/deploy/charts/emqx).
  - [HiveMQ](https://www.hivemq.com/docs/hivemq/4.4/user-guide/getting-started.html) provides various installation options.
- - [VerneMQ](https://github.com/vernemq/vernemq) is also available as source, binaries, Docker containers and helm charts.
+ - [VerneMQ](https://github.com/vernemq/vernemq) is also available as source, binaries, Docker containers and [Helm charts](https://docs.vernemq.com/guides/vernemq-on-kubernetes).
 
