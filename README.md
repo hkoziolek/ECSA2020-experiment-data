@@ -41,6 +41,8 @@ To use the BDL scripts, you need to setup [MZBench](https://satori-com.github.io
 
 We used Python scripts to create the plots for the paper, which crossed the Prometheus cpu load metrics with the throughput metrics from MZBench. 
 
+You can edit the MQTT Decision model with [ADMentor](https://github.com/IFS-HSR/ADMentor). The model is meant as a minimal starting point to be refined, not as a comprehensive model to be used right away.
+
 ## Related Work
 - [VerneMQ: Reaching 5M message connections](https://www.slideshare.net/ConnectedMarketing/reaching-5-million-messaging-connections-our-journey-with-kubernetes-126143229)
 - [HiveMQ: 10M MQTT clients](https://www.hivemq.com/benchmark-10-million/)
