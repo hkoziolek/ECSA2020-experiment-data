@@ -1,4 +1,4 @@
-# ECSA 2020 Experiment Data (Paper #50)
+# Clustered MQTT Broker Testing Results
  
 ## Introduction
 This repository provides experiment data from the [ECSA 2020](https://ecsa2020.disim.univaq.it/) paper "[A Comparison of MQTT Brokers for Distributed IoT Edge Computing"](http://www.koziolek.de/docs/Koziolek2020-ECSA-preprint.pdf) written by Heiko Koziolek, Sten Grüner and Julius Rückert from ABB Research. A 10-min video presenting the paper is available on [Youtube](https://www.youtube.com/watch?v=hvjQLZfQvso).
